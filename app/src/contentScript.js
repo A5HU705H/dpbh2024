@@ -28,37 +28,39 @@ chrome.runtime.sendMessage(
   (response) => {
     console.log(response.message);
   }
-).then().catch();
+);
 
-
-
+var removed=false;
+var checkremoved=false;
 // Preselection removal
 function executeFunction() {
   console.log("presection removal");
+  var checkboxElements = document.querySelectorAll('input[type="checkbox"]');
+
+            // Iterate through each checkbox element
+            checkboxElements.forEach(function(checkboxElement) {
+                // Check if the checkbox is preselected
+                if (checkboxElement.checked && !checkremoved) {
+                    // If preselected, uncheck the checkbox
+                    checkboxElement.checked = false;
+                    checkremoved=true;
+                }
+            });
   var selectElements = document.querySelectorAll("select");
 
   // Iterate through each select element
   selectElements.forEach(function (selectElement) {
     // Check if any option is already selected
     var selectedOption = selectElement.querySelector("option:checked");
-    if (selectedOption) {
+    if (selectedOption && !removed) {
       // If selected, change the value to "none"
       selectElement.value = "none";
+      removed=true;
     }
   });
 
-  // Get all checkbox elements
-  var checkboxElements = document.querySelectorAll('input[type="checkbox"]');
-  // console.log(checkboxElements);
+  
 
-  // Iterate through each checkbox element
-  checkboxElements.forEach(function (checkboxElement) {
-    // Check if the checkbox is preselected
-    if (checkboxElement.checked) {
-      // If preselected, uncheck the checkbox
-      checkboxElement.checked = false;
-    }
-  });
 }
 
 // Call the function initially
