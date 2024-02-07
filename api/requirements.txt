@@ -1,4 +1,4 @@
 flask
-joblib
-scikit-learn
 flask_cors
+imgkit
+wkhtmltopdf
