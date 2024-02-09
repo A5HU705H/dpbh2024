@@ -15,13 +15,12 @@ embed_model = SentenceTransformer('BAAI/bge-large-en')
 app = Flask(__name__)
 CORS(app)
 
-
-@app.route('/html', methods = ['POST'])
-def returnHTML():
-    data = request.json
-    imgkit.from_string(data, 'out.jpg')
-    # print(data)
-    return 'successfully recieved'
+# @app.route('/html', methods = ['POST'])
+# def returnHTML():
+#     data = request.json
+#     imgkit.from_string(data, 'out.jpg')
+#     # print(data)
+#     return 'successfully recieved'
 
 @app.route('/screenshot', methods = ['POST'])
 def renderScreenshot():

@@ -1,0 +1,41 @@
+[33mcommit 118126036b660d009daf759c0ad1d9f5a21faada[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author: Gaurav <mahendrakergaurav@gmail.com>
+Date:   Fri Feb 9 22:20:52 2024 +0530
+
+    screenshot handler  in app.py
+
+[33mcommit 76a43bd303eb00217c60536fe5a9dabd8c4a4e2d[m
+Author: Gaurav <mahendrakergaurav@gmail.com>
+Date:   Fri Feb 9 21:11:35 2024 +0530
+
+    background.js taking periodic screenshots and posting to backend
+
+[33mcommit 60505d36be2349229f1433891d518763b7757fa6[m
+Author: Gaurav <mahendrakergaurav@gmail.com>
+Date:   Wed Feb 7 19:36:00 2024 +0530
+
+    removed the preselection bug
+
+[33mcommit ae9b0a981d0d0ad21a34158e8a95f38ee841838e[m
+Author: Gaurav <mahendrakergaurav@gmail.com>
+Date:   Wed Feb 7 18:37:20 2024 +0530
+
+    presection removed
+
+[33mcommit 06ac1201aa65262405c6e873b3c89c1b7118eceb[m[33m ([m[1;31morigin/Samip[m[33m)[m
+Author: A5HU705H <https://github.com/A5HU705H>
+Date:   Wed Feb 7 15:20:29 2024 +0530
+
+    revamps w/ chrome-extension-cli
+
+[33mcommit 16c6a24272066b5e1490e80caf006c5942821aaa[m
+Author: A5HU705H <https://github.com/A5HU705H>
+Date:   Thu Feb 1 23:49:57 2024 +0530
+
+    init commit
+
+[33mcommit a354ef9aed0de32a3ab179d9abcd51118b0bdd44[m
+Author: A5HU705H <104879825+A5HU705H@users.noreply.github.com>
+Date:   Thu Feb 1 23:43:33 2024 +0530
+
+    Initial commit
