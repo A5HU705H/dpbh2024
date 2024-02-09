@@ -5,9 +5,11 @@ import pickle
 from model import Classifier,predlist
 from rag import get_dark_patterns
 import imgkit
-
+from sentence_transformers import SentenceTransformer
 dpdet = Classifier()
 dpdet.load_state_dict(torch.load('model.bin'))
+embed_model = SentenceTransformer('BAAI/bge-large-en')
+
 app = Flask(__name__)
 CORS(app)
 
@@ -23,7 +25,7 @@ def returnHTML():
 @app.route('/dom', methods = ['POST'])
 def returnDOM():
     data = request.json.split('/n')
-    det = predlist(data)
+    det = predlist(dpdet, embed_model,data)
     for i in det:
         print(i[0])
     return data
