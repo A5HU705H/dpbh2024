@@ -37,9 +37,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       body: JSON.stringify(request.payload.text),
     })
       .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
+        console.log(response);
         return response.json();
       })
       .catch((error) => console.error('Error:', error));
