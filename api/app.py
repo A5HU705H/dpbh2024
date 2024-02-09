@@ -9,7 +9,6 @@ import time
 dpdet = Classifier()
 embed_model  = SentenceTransformer('BAAI/bge-large-en')
 dpdet.load_state_dict(torch.load('model.bin'))
-
 app = Flask(__name__)
 CORS(app)
 
