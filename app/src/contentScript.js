@@ -45,6 +45,45 @@ chrome.runtime.sendMessage(
   }
 );
 
+var removed=false;
+var checkremoved=false;
+// Preselection removal
+function executeFunction() {
+  console.log("presection removal");
+  var checkboxElements = document.querySelectorAll('input[type="checkbox"]');
+
+            // Iterate through each checkbox element
+            checkboxElements.forEach(function(checkboxElement) {
+                // Check if the checkbox is preselected
+                if (checkboxElement.checked && !checkremoved) {
+                    // If preselected, uncheck the checkbox
+                    checkboxElement.checked = false;
+                    checkremoved=true;
+                }
+            });
+  var selectElements = document.querySelectorAll("select");
+
+  // Iterate through each select element
+  selectElements.forEach(function (selectElement) {
+    // Check if any option is already selected
+    var selectedOption = selectElement.querySelector("option:checked");
+    if (selectedOption && !removed) {
+      // If selected, change the value to "none"
+      selectElement.value = "none";
+      removed=true;
+    }
+  });
+
+  
+
+}
+
+// Call the function initially
+executeFunction();
+
+// Call the function every 1000 milliseconds (1 second)
+ setInterval(executeFunction, 5000);
+
 // Listen for message
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === 'COUNT') {
