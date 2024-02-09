@@ -36,5 +36,11 @@ def getDarkPatterns():
     dark_patterns = get_dark_patterns(query)
     return jsonify(dark_patterns)
 
+@app.route('/flags', methods = ['GET'])
+def getFlags():
+    print("Hello")
+    return jsonify([{"text": "Ignite", "flag": "Confirm Shaming"},
+                    {"text": "Chocolate", "flag": "Misdirection"},])
+
 if __name__ == '__main__':
     app.run(threaded=True, debug=True)

@@ -27,13 +27,23 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     // sendResponse({
     //   message,
     // });
-
     fetch(endpoint + '/dom', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(request.payload.text),
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => console.error('Error:', error));
+
+    fetch(endpoint + '/flags', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     })
       .then((response) => {
         console.log(response);
