@@ -53,6 +53,7 @@ def predlist(model, embed_model, texts:list):
     dps = []
     for text in texts:
         embeds = embed_model.encode(text)
-        preds = model(embeds)
+        preds = model(torch.tensor(embeds))
         if preds>0.5:
             dps.append((text,embeds))
+    return dps

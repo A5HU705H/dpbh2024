@@ -40,8 +40,7 @@ chrome.runtime.sendMessage(
     },
   },
   (response) => {
-    console.log(response.message);
-    console.log(response.text);
+    console.log("message sent");
   }
 );
 

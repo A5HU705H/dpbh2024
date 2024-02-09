@@ -6,8 +6,10 @@
 // See https://developer.chrome.com/extensions/background_pages
 
 const endpoint = 'http://127.0.0.1:5000';
+console.log('Background is running');
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  console.log('message received');
   if (request.type === 'GREETINGS') {
     const message = `Hi ${
       sender.tab ? 'Con' : 'Pop'
@@ -35,18 +37,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       body: JSON.stringify(request.payload.text),
     })
       .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => console.error('Error:', error));
-
-    fetch(endpoint + '/flags', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => {
-        console.log(response);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
       })
       .catch((error) => console.error('Error:', error));
   }

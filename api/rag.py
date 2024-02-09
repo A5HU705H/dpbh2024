@@ -18,7 +18,7 @@ def create_hnsw_index(embedding, M=16, efC=100):
     index.add_items(embeddings, ids)
     return index
 
-def find_nearest_neighbors(query_embedding, queries, search_index, EF=100, K = 10, COSINE_THRESHOLD = 0.3):
+def find_nearest_neighbors(query_embedding, queries, search_index, EF=100, K = 1, COSINE_THRESHOLD = 0.3):
     search_index.set_ef(EF)
     labels, distances = search_index.knn_query(query_embedding, k=K)  # Find the k-nearest neighbors for the query embedding
     labels = [label for label, distance in zip(labels[0], distances[0]) if (1 - distance) >= COSINE_THRESHOLD]
@@ -59,6 +59,6 @@ with open('embeddings.pkl', 'rb') as f:
 
 def get_dark_patterns(query):
     list_of_embeddings = [i[0] for i in vec_database]
-    embed = create_query_embedding(biencoder, query)
     search_index = create_hnsw_index(np.array(list_of_embeddings))
-    topk_queries = find_nearest_neighbors(embed, vec_database , search_index)
+    topk_queries = find_nearest_neighbors(query, vec_database , search_index)
+    return topk_queries
