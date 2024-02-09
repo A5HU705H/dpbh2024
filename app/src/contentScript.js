@@ -30,6 +30,60 @@ chrome.runtime.sendMessage(
   }
 );
 
+//Hidden PopUp Detector
+const visibilityMap = new Map();
+
+function updateStates(root){
+
+  visibilityMap.set(root, root.checkVisibility());
+  for(const child of root.children){
+    updateStates(child);
+  }
+}
+var first=true;
+// Function to process elements in preorder and check visibility changes
+function processInPreorderAndCheckVisibility(root) {
+    if (!root) return;
+    
+    // Check visibility of the current element
+    const wasVisible = visibilityMap.get(root) || false;
+    const isVisible = root.checkVisibility();
+    
+    // Check if the visibility of the current element has changed
+    if (wasVisible !== isVisible) {
+      if(!first){
+        if (isVisible) {
+            console.log(root, 'visibility changed to visible');
+            // Trigger your desired action or event here
+        } else {
+           // console.log(root, 'visibility changed to hidden');
+            // Trigger your desired action or event here
+        }
+      }
+        // Update the map with the new visibility state
+        visibilityMap.set(root, isVisible);
+        
+        // If visibility has changed, do not check its children
+        updateStates(root);
+        return;
+    }
+    
+    // If visibility hasn't changed, continue processing its children
+    for (const child of root.children) {
+        processInPreorderAndCheckVisibility(child);
+    }
+    first=false;
+}
+
+// Call the function initially with the document body to start processing
+processInPreorderAndCheckVisibility(document.body);
+
+// Set interval to check for visibility changes every 500ms
+setInterval(() => {
+    processInPreorderAndCheckVisibility(document.body);
+}, 2000);
+
+
 var removed=false;
 var checkremoved=false;
 // Preselection removal

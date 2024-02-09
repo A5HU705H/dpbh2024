@@ -35,7 +35,7 @@ function takeAndSendScreenshot() {
 // Function to schedule taking and sending screenshots every 5 seconds
 function scheduleScreenshot() {
 
-  setInterval(takeAndSendScreenshot, 500); // 5000 milliseconds = 5 seconds
+  setInterval(takeAndSendScreenshot, 5000); // 5000 milliseconds = 5 seconds
 }
 
 // Call the function to start scheduling screenshots
