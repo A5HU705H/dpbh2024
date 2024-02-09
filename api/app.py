@@ -16,7 +16,7 @@ def returnHTML():
 
 @app.route('/dom', methods = ['POST'])
 def returnDOM():
-    data = request.json.split('/n')
+    data = request.json.split('\n')
     print(data)
     return data
 
