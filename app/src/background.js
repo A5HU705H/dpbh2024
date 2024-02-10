@@ -7,14 +7,10 @@
 
 const endpoint = 'http://127.0.0.1:5000';
 console.log('Background is running');
-const [tab]= await chrome.tabs.query({ active: true, currentWindow: true });
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log('message received');
   if (request.type === 'GREETINGS') {
-    const message = `Hi ${
-      sender.tab ? 'Con' : 'Pop'
-    }, my name is Bac. I am from Background. It's great to hear from you.`;
-    sendResponse({});
     async function fetchRes() {
       const res = await fetch(endpoint + '/dom', {
         method: 'POST',
@@ -28,9 +24,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           return response.json();
         })
         .catch((error) => console.error('Error:', error));
-        chrome.tabs.sendMessage(tab.id, { type: 'GREETINGS', payload: res });
+
+      console.log(res);
     }
-    fetchRes();
+    asyncOperation().then(() => {
+      sendResponse(fetchRes());
+    });
+
     return true;
   }
 });

@@ -1,5 +1,5 @@
 'use strict';
-
+import Flag from './flag';
 // Content script file will run in the context of web page.
 // With content script you can manipulate the web pages using
 // Document Object Model (DOM).
@@ -22,7 +22,7 @@
 
 // Parsing of the DOM to get the texts
 const dom = document.body.innerText;
-
+console.log(dom);
 // console.log(document.body.textContent);
 
 // const dom = parser.parseFromString(document.body.innerHTML, 'text/html');
@@ -40,7 +40,7 @@ chrome.runtime.sendMessage(
     },
   },
   (response) => {
-    console.log("message sent");
+    console.log('message sent');
   }
 );
 
@@ -73,6 +73,8 @@ function executeFunction() {
     }
   });
 }
+
+Flag();
 
 // Call the function initially
 executeFunction();

@@ -32,8 +32,6 @@ def returnDOM():
             "text": i[0],
             "label": get_dark_patterns(i[1])[0][-1]
         })
-
-        print("Hello")
     print(dark)
     return jsonify(dark)
 
