@@ -7,16 +7,16 @@
 
 const endpoint = 'http://127.0.0.1:5000';
 console.log('Background is running');
-let tab;
-chrome.tabs.query({ active: true, currentWindow: true }).then(([activeTab])=>{
-  tab=activeTab;
-  console.log(tab);
-});
+// let tab;
+// chrome.tabs.query({ active: true, currentWindow: true }).then(([activeTab]) => {
+//   tab = activeTab;
+//   console.log(tab);
+// });
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log('message received');
   if (request.type === 'innerText') {
-    sendResponse({type:'innerText'});
-    async function fetchRes() {
+    sendResponse({ type: 'innerText' });
+    async function fetchRes(request, sender, sendResponse) {
       const res = await fetch(endpoint + '/dom', {
         method: 'POST',
         headers: {
@@ -29,12 +29,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           return response.json();
         })
         .catch((error) => console.error('Error:', error));
-        chrome.tabs.sendMessage(tab.id, { type: 'innerText', payload: res });
+      chrome.tabs.sendMessage(sender.tab.id, { type: 'innerText', payload: res });
     }
-    asyncOperation().then(() => {
-      sendResponse(fetchRes());
-    });
-
+    fetchRes(request,sender,sendResponse);
     return true;
   }
+  return false;
 });
