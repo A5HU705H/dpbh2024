@@ -10,14 +10,17 @@
     "128": "icons/icon_128.png"
   },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type":"module"
   },
   "action": {
     "default_title": "App",
     "default_popup": "popup.html"
   },
   "permissions": [
-    "storage"
+    "storage",
+    "activeTab",
+    "scripting"
   ],
   "content_scripts": [
     {
@@ -27,6 +30,17 @@
       "run_at": "document_idle",
       "js": [
         "contentScript.js"
+      ]
+    }
+  ] ,
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "pesticide.min.css",
+        "pesticide.js"
+      ],
+      "matches": [
+        "<all_urls>"
       ]
     }
   ]
