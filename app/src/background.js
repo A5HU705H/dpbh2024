@@ -7,39 +7,30 @@
 
 const endpoint = 'http://127.0.0.1:5000';
 console.log('Background is running');
-
+const [tab]= await chrome.tabs.query({ active: true, currentWindow: true });
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log('message received');
   if (request.type === 'GREETINGS') {
     const message = `Hi ${
       sender.tab ? 'Con' : 'Pop'
     }, my name is Bac. I am from Background. It's great to hear from you.`;
-
-    // fetch(endpoint + '/html', {
-    //   method: "POST",
-    //   headers : {
-    //     "Content-Type": "application/json"
-    //   },
-    //   body : JSON.stringify(request.payload.message)
-    // }).then((response) => {console.log(response);})
-    //   .catch((error) => console.error("Error:", error));
-    // // Log message coming from the `request` parameter
-    // console.log(request.payload.message);
-    // // Send a response message
-    // sendResponse({
-    //   message,
-    // });
-    fetch(endpoint + '/dom', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(request.payload.text),
-    })
-      .then((response) => {
-        console.log(response);
-        return response.json();
+    sendResponse({});
+    async function fetchRes() {
+      const res = await fetch(endpoint + '/dom', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(request.payload.text),
       })
-      .catch((error) => console.error('Error:', error));
+        .then((response) => {
+          return response.json();
+        })
+        .catch((error) => console.error('Error:', error));
+        chrome.tabs.sendMessage(tab.id, { type: 'GREETINGS', payload: res });
+    }
+    fetchRes();
+    return true;
   }
 });
