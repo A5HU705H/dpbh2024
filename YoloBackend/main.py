@@ -53,7 +53,7 @@ class Echo(WebSocketEndpoint):
     async def on_receive(self, websocket, data):
         results=self.model.track('https://ultralytics.com/images/bus.jpg',persist=True)
         # print(results)
-        await websocket.send_text(f"Message text was: {data} LOlm {results}")
+        await websocket.send_text(f"Message text was: {data},{results}")
 
 routes = [
     Route("/", Homepage),

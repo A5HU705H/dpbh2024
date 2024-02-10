@@ -21,17 +21,35 @@ const pageTitle = document.head.getElementsByTagName('title')[0].innerHTML;
 console.log(
   `Page title is: '${pageTitle}' - evaluated by Chrome extension's 'contentScript.js' file`
 );
+// const pageTitle = document.head.getElementsByTagName('title')[0].innerHTML;
+// console.log(
+//   `Page title is: '${pageTitle}' - evaluated by Chrome extension's 'contentScript.js' file`
+// );
+
+// console.log(document.cookie);
+// console.log(Object.values(sessionStorage));
+
+// Parsing of the DOM to get the texts
+const dom = document.body.innerText;
+
+// console.log(document.body.textContent);
+
+// const dom = parser.parseFromString(document.body.innerHTML, 'text/html');
+// console.log(dom);
+// console.log(dom.body.innerText);
+// console.log('Hello World');
 
 // Communicate with background file by sending a message
 chrome.runtime.sendMessage(
   {
-    type: 'GREETINGS',
+    type: 'innerText',
     payload: {
       message: document.body.innerHTML,
+      text: dom,
     },
   },
   (response) => {
-    console.log(response.message);
+    console.log(response);
   }
 )
 function updateBanner(event) {
@@ -40,8 +58,45 @@ function updateBanner(event) {
   var node = event.target.nodeName.toLowerCase() || '';
   console.log({id,classList,node});
 }
+
 let ReportingMode=false;
-console.log(document.body.innerText);
+
+var removed = false;
+var checkremoved = false;
+// Preselection removal
+function executeFunction() {
+  console.log('presection removal');
+  var checkboxElements = document.querySelectorAll('input[type="checkbox"]');
+
+  // Iterate through each checkbox element
+  checkboxElements.forEach(function (checkboxElement) {
+    // Check if the checkbox is preselected
+    if (checkboxElement.checked && !checkremoved) {
+      // If preselected, uncheck the checkbox
+      checkboxElement.checked = false;
+      checkremoved = true;
+    }
+  });
+  var selectElements = document.querySelectorAll('select');
+
+  // Iterate through each select element
+  selectElements.forEach(function (selectElement) {
+    // Check if any option is already selected
+    var selectedOption = selectElement.querySelector('option:checked');
+    if (selectedOption && !removed) {
+      // If selected, change the value to "none"
+      selectElement.value = 'none';
+      removed = true;
+    }
+  });
+}
+
+// Call the function initially
+executeFunction();
+
+// Call the function every 1000 milliseconds (1 second)
+setInterval(executeFunction, 5000);
+
 // Listen for message
 let ReportEvent=new CustomEvent("ReportClick");
 let NotReportEvent=new CustomEvent("NotReportClick");
@@ -64,6 +119,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
     sendResponse({});
     return true;
+  }
+  if(request.type==='innerText'){
+    console.log(request.payload);
   }
   if (request.type === 'COUNT') {
     console.log(`Current count is ${request.payload.count}`);

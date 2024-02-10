@@ -16,8 +16,6 @@ document.getElementById('Boxes').addEventListener('click',Make_boxes);
 console.log("erew");
 
 (function () {
-
-
   // broadcast to content scripts and active background scripts
   chrome.runtime.sendMessage(
     {
@@ -27,7 +25,8 @@ console.log("erew");
       },
     },
     (response) => {
-      console.log(response.message);
+      // console.log(response.message);
+      console.log('Popup received response');
     }
   );
 })();
