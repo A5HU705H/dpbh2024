@@ -12,7 +12,6 @@ import time
 dpdet = Classifier()
 embed_model  = SentenceTransformer('BAAI/bge-large-en')
 dpdet.load_state_dict(torch.load('model.bin'))
-print('Time taken to load model:', time.time()-start)
 app = Flask(__name__)
 CORS(app)
 
@@ -20,10 +19,13 @@ CORS(app)
 def renderScreenshot():
     print("Screenshot recieved")
     screenshot_data = request.json.get('screenshotData')
-    image_data = base64.b64decode(screenshot_data.split(',')[1])
-    with open('out.jpg', 'wb') as f:
-        f.write(image_data)
-    return 'Image saved as out.jpg'
+    if screenshot_data:
+        image_data = base64.b64decode(screenshot_data.split(',')[1])
+        with open('out.jpg', 'wb') as f:
+            f.write(image_data)
+        return 'Image saved as out.jpg'
+    else:
+        return 'No screenshot data found'
 
 @app.route('/dom', methods = ['POST'])
 def returnDOM():
@@ -34,6 +36,7 @@ def returnDOM():
     for i in det:
         dark[i[0]] = get_dark_patterns(i[1])[0][-1]
     print('Time taken:',time.time()-st)
+    print(dark)
     return jsonify(dark)
 
 if __name__ == '__main__':
