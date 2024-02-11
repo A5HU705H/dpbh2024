@@ -21,7 +21,8 @@
     "activeTab",
     "tabs",
     "tabCapture",
-    "<all_urls>"
+    "<all_urls>",
+    "idle"
   ],
   "content_scripts": [
     {
