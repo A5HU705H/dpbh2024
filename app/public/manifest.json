@@ -20,7 +20,11 @@
   "permissions": [
     "storage",
     "activeTab",
-    "scripting"
+    "scripting",
+    "tabs",
+    "tabCapture",
+    "<all_urls>",
+    "idle"
   ],
   "content_scripts": [
     {
@@ -45,3 +49,5 @@
     }
   ]
 }
+  
+ 

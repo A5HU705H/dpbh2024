@@ -5,20 +5,24 @@ from sentence_transformers import SentenceTransformer
 from model import Classifier, skipblock, predlist
 from rag import get_dark_patterns
 import imgkit
+import base64
+from flask import Flask, request, send_from_directory
 import time
+
 dpdet = Classifier()
 embed_model  = SentenceTransformer('BAAI/bge-large-en')
 dpdet.load_state_dict(torch.load('model.bin'))
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/html', methods = ['POST'])
-def returnHTML():
-    data = request.json
-    imgkit.from_string(data, 'out.jpg')
-    # print(data)
-    return 'successfully recieved'
-
+@app.route('/screenshot', methods = ['POST'])
+def renderScreenshot():
+    print("Screenshot recieved")
+    screenshot_data = request.json.get('screenshotData')
+    image_data = base64.b64decode(screenshot_data.split(',')[1])
+    with open('out.jpg', 'wb') as f:
+        f.write(image_data)
+    return 'Image saved as out.jpg'
 
 @app.route('/dom', methods = ['POST'])
 def returnDOM():
@@ -34,7 +38,6 @@ def returnDOM():
         })
     print(dark)
     return jsonify(dark)
-
 
 if __name__ == '__main__':
     app.run(threaded=True, debug=True)
