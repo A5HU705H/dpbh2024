@@ -1,15 +1,19 @@
+flask
+flask_cors
+imgkit
+wkhtmltopdf
 accelerate==0.26.1
-aiobotocore @ file:///C:/b/abs_74o47svlua/croot/aiobotocore_1680004300264/work
-aiofiles @ file:///C:/b/abs_9ex6mi6b56/croot/aiofiles_1683773603390/work
-aiohttp @ file:///C:/ci_311/aiohttp_1676432932774/work
-aioitertools @ file:///tmp/build/80754af9/aioitertools_1607109665762/work
-aiosignal @ file:///tmp/build/80754af9/aiosignal_1637843061372/work
-aiosqlite @ file:///C:/b/abs_9djc_0pyi3/croot/aiosqlite_1683773915844/work
-alabaster @ file:///home/ktietz/src/ci/alabaster_1611921544520/work
-anaconda-catalogs @ file:///C:/b/abs_8btyy0o8s8/croot/anaconda-catalogs_1685727315626/work
+aiobotocore
+aiofiles 
+aiohttp 
+aioitertools
+aiosignal 
+aiosqlite 
+alabaster 
+anaconda-catalogs 
 anaconda-client==1.12.0
 anaconda-navigator==2.4.2
-anaconda-project @ file:///C:/ci_311/anaconda-project_1676458365912/work
+anaconda-project 
 annotated-types==0.6.0
 anyio @ file:///C:/ci_311/anyio_1676425491996/work/dist
 appdirs==1.4.4
