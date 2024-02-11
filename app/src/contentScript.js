@@ -31,6 +31,24 @@ console.log(
 // Parsing of the DOM to get the texts
 const dom = document.body.innerText;
 
+function traverse(root, res) {
+  if (root == null || res.length <= 0) {
+    return;
+  }
+  root.childNodes.forEach((child) => {
+    traverse(child, res);
+    if (child) {
+      if (res.hasOwnProperty(child.innerText)) {
+        console.log('Flagging !');
+        child.style.backgroundColor = '#8F00FF';
+        child.appendChild(document.createTextNode(res[child.innerText]));
+        child.style.border = '5px solid black';
+      } else {
+        console.log('No flags !');
+      }
+    }
+  });
+}
 // console.log(document.body.textContent);
 
 // const dom = parser.parseFromString(document.body.innerHTML, 'text/html');
@@ -49,6 +67,8 @@ chrome.runtime.sendMessage(
   },
   (response) => {
     console.log(response);
+    traverse(document.body, response);
+    console.log('Message sent to background file for innerText');
   }
 );
 function updateBanner(event) {
@@ -279,6 +299,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
   if (request.type === 'innerText') {
     const res = request.payload;
+    console.log('innerText received');
+
     console.log(res);
   }
   if (request.type === 'COUNT') {
