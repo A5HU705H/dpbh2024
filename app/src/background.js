@@ -6,45 +6,23 @@
 // See https://developer.chrome.com/extensions/background_pages
 
 const endpoint = 'http://127.0.0.1:5000';
+console.log('Background is running');
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.type === 'GREETINGS') {
-    fetch(endpoint + '/html', {
-      method: "POST",
-      headers : {
-        "Content-Type": "application/json"
-      },
-      body : JSON.stringify(request.payload.message)
-    }).then((response) => {console.log(response);})
-      .catch((error) => console.error("Error:", error));
-    // Log message coming from the `request` parameter
-    console.log(request.payload.message);
-    // Send a response message
-    sendResponse({
-      message,
-    });
-    fetch(endpoint + '/dom', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(request.payload.text),
-    })
-      .then((response) => {
-        console.log(response);
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {    
+  if (request.type === "innerText") {
+      console.log('message received');      
+      fetch(endpoint + '/dom', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify(request.payload.text),
       })
-      .catch((error) => console.error('Error:', error));
-
-    fetch(endpoint + '/flags', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => console.error('Error:', error));
+          .then(response => response.json())
+          .then(response => sendResponse(response))
+          .catch(error => console.log('Error:', error));
+      return true;
   }
 });
 
@@ -87,3 +65,62 @@ function scheduleScreenshot() {
 
 // Call the function to start scheduling screenshots
 scheduleScreenshot();
+
+
+
+// chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+//   console.log('message received');
+//   if (request.type === 'innerText') {
+
+//     fetch(endpoint + '/dom', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         Accept: 'application/json',
+//       },
+//       body: JSON.stringify(request.payload.text),
+//     })
+//     .then((response) => {
+//       console.log('response received');
+//       chrome.tabs.sendMessage(sender.tab.id, {
+//         type: 'innerText',
+//         payload: res,
+//       });
+//       // return response.json();
+//     })
+//     .catch((error) => console.error('Error:', error));
+//     sendResponse({ type: 'innerText' });
+//     // return true;
+//   }
+//   // return false;
+// });
+
+// let tab;
+// chrome.tabs.query({ active: true, currentWindow: true }).then(([activeTab]) => {
+//   tab = activeTab;
+//   console.log(tab);
+// });
+// function fetchRes(request, sender, sendResponse) {
+//   // const res = await 
+//   fetch(endpoint + '/dom', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       Accept: 'application/json',
+//     },
+//     body: JSON.stringify(request.payload.text),
+//   })
+//   .then((response) => {
+//     chrome.tabs.sendMessage(sender.tab.id, {
+//       type: 'innerText',
+//       payload: res,
+//     });
+//     // return response.json();
+//   })
+//   .catch((error) => console.error('Error:', error));
+// }
+
+
+
+
+

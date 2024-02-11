@@ -1,6 +1,19 @@
 'use strict';
 
 import './popup.css';
+console.log("this is a popup");
+async function Make_boxes(){
+  let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  console.log("clicked");
+  chrome.tabs.sendMessage(
+    tab.id,
+    {
+      type: 'Boxes',
+    }
+  );
+};
+document.getElementById('Boxes').addEventListener('click',Make_boxes);
+console.log("erew");
 
 
 (function () {
@@ -13,7 +26,8 @@ import './popup.css';
       },
     },
     (response) => {
-      console.log(response.message);
+      // console.log(response.message);
+      console.log('Popup received response');
     }
   );
 })();
