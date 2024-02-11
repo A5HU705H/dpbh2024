@@ -19,23 +19,23 @@ CORS(app)
 def renderScreenshot():
     print("Screenshot recieved")
     screenshot_data = request.json.get('screenshotData')
-    image_data = base64.b64decode(screenshot_data.split(',')[1])
-    with open('out.jpg', 'wb') as f:
-        f.write(image_data)
-    return 'Image saved as out.jpg'
+    if screenshot_data:
+        image_data = base64.b64decode(screenshot_data.split(',')[1])
+        with open('out.jpg', 'wb') as f:
+            f.write(image_data)
+        return 'Image saved as out.jpg'
+    else:
+        return 'No screenshot data found'
 
 @app.route('/dom', methods = ['POST'])
 def returnDOM():
     data = request.json.split('\n')
-    # print(data)
     st=time.time()
-    det = predlist(dpdet, embed_model,data)
-    dark = []
+    det = predlist(dpdet, embed_model, data)
+    dark = {}
     for i in det:
-        dark.append({
-            "text": i[0],
-            "label": get_dark_patterns(i[1])[0][-1]
-        })
+        dark[i[0]] = get_dark_patterns(i[1])[0][-1]
+    print('Time taken:',time.time()-st)
     print(dark)
     return jsonify(dark)
 
