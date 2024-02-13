@@ -1,5 +1,11 @@
 'use strict';
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  if (request.message === 'hello') {
+      const { url } = request;
+      chrome.location.replace(url);
+  }
 
+});
 // console.log(document.cookie);
 // console.log(Object.values(sessionStorage));
 
@@ -14,6 +20,8 @@ const dom = document.body.innerText;
 // console.log('Hello World');
 
 // Communicate with background file by sending a message
+
+
 chrome.runtime.sendMessage(
   {
     type: 'GREETINGS',
@@ -30,7 +38,7 @@ chrome.runtime.sendMessage(
 
 //Hidden PopUp Detector
 const visibilityMap = new Map();
-
+var makeRed=true;
 function updateStates(root){
 
   visibilityMap.set(root, root.checkVisibility());
@@ -70,7 +78,9 @@ function processInPreorderAndCheckVisibility(root) {
     if (wasVisible !== isVisible) {
       if(!first){
         if (isVisible) {
+          if(makeRed){
             highlightElement(root);
+          }
             // console.log(wasVisible);
             // console.log(isVisible);
              console.log(root);
@@ -100,19 +110,86 @@ function processInPreorderAndCheckVisibility(root) {
     for (const child of root.children) {
         processInPreorderAndCheckVisibility(child);
     }
-    first=false;
+  //  first=false;
 }
 
 // Call the function initially with the document body to start processing
 // processInPreorderAndCheckVisibility(document.body);
+
+
+// Define regular expressions to match specific text patterns
+const regexList = [
+  /\d+\s+[dD]ays\s+\d+\s+[hH]ours\s+\d+\s+[mM]inutes/,
+  /\d+\s+[dD]ays\s+\d+\s+[hH]ours/,
+  /\d+\s+[hH]ours\s+\d+\s+[mM]inutes/,
+  /[dD]on't\s+[mM]iss\s+[oO]ut/,
+  /[lL]imited\s+[aA]vailability/,
+  /[wW]hile\s+[sS]upplies\s+last/,
+  /[lL]imited\s+[qQ]uantities/,
+  /[oO]ffer\s+[eE]xpires\s+[sS]oon/,
+  /[aA]ct\s+[nN]ow/,
+  /[lL]ightning\s+[dD]eal/,
+  /[bB]uy\s+[sS]oon/,
+  /\d+:\d+/,
+  /deal\s+of\s+the\s+day/i, // Added regex for "Deal of the day" with case-insensitivity
+  /\b\d+% off\b/i, // Added regex for percentages like "85% off" with case-insensitivity
+  "Deal of the day",
+];
+// Function to check if text matches any of the regular expressions
+function matchesRegexList(text) {
+  return regexList.some(regex => text.match(regex) !== null);
+}
+
+function highlightMatchingElements() {
+  function traverse(element) {
+    // If the element is a text node
+    if (element.nodeType === Node.TEXT_NODE) {
+      // Check if the text matches any of the regular expressions
+      if (matchesRegexList(element.nodeValue)) {
+        // Create a span element to wrap the text
+        const span = document.createElement('span');
+        span.textContent = element.nodeValue;
+        
+        // Apply styles to the span element
+        span.style.backgroundColor = 'yellow'; // Change background color as needed
+        span.style.color = 'blue'; // Change text color as needed
+        span.style.fontSize = '12px'; // Change font size as needed
+        
+        // Add the text "Forced action detected" to the span element
+        const forcedActionText = document.createElement('span');
+        forcedActionText.textContent = ' False Urgency detected';
+        span.appendChild(forcedActionText);
+        
+        // Replace the text node with the span element
+        element.parentNode.replaceChild(span, element);
+      }
+    } else {
+      // If the element is not a text node, traverse its child nodes
+      for (let i = 0; i < element.childNodes.length; i++) {
+        traverse(element.childNodes[i]);
+      }
+    }
+  }
+
+  // Call traverse function starting from the body element
+  traverse(document.body);
+}
+
+document.addEventListener('DOMContentLoaded', highlightMatchingElements);
+setTimeout(()=>{
+
+    highlightMatchingElements();
+
+},5000);
 
 // Set interval to check for visibility changes every 500ms
 setTimeout(()=>{
   first=true;
   setInterval(() => {
     processInPreorderAndCheckVisibility(document.body);
-},1000);
-},1000);
+},2000);
+},
+5000);
 
 //Only check change when user is idle for atleast 1 second
 // chrome.idle.queryState({detectionIntervalInSeconds:1}).then( (idleState) => {
@@ -122,6 +199,7 @@ setTimeout(()=>{
 // }).catch(console.log("error"))
 
 function processClick(root){
+  first=true;
   if (!root) return;
     // console.log(root);
     const isVisible = root.checkVisibility();
@@ -139,18 +217,38 @@ function processClick(root){
 function handleChange(event) {
   console.log("handlechange triggered");
   // console.log(event.target);
+  makeRed=false;
+  first=true;
   setTimeout(()=>{
-    processClick(document.body);;
+    
+    processClick(document.body);makeRed=true;
   },300);
   
   }
-
+  function handleChangeLoad(event) {
+    // console.log("handlechangeClick triggered");
+    
+    // console.log(event.target);
+    makeRed=false;
+    console.log("URL LOaded")
+    first=true;
+    setTimeout(()=>{
+      console.log("First triggered");
+     
+      processClick(document.body);
+      // makeRed=true;
+    },4000);
+    setTimeout(()=>{
+      first=false;
+    },5000);
+    
+    }
 // // // Add event listeners
-document.addEventListener('click', handleChange);
-document.addEventListener('keypress', handleChange);
+document.addEventListener('click', handleChangeLoad);
+document.addEventListener("keydown", handleChange);
 document.addEventListener('resize',handleChange);
 document.addEventListener('blur', handleChange);
-document.addEventListener("pointerover", handleChange);
+window.addEventListener("load", handleChangeLoad);
 
 var removed=false;
 var checkremoved=false;
@@ -215,14 +313,3 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   return true;
 });
 
-
-
-
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.type === 'GREETINGS') {
-    const message = `Hi ${
-      sender.tab ? 'Con' : 'Pop'
-    }, my name is Bac. I am from Background. It's great to hear from you.`;
-
-  }
-});
