@@ -15,6 +15,7 @@ async function Make_boxes(){
 document.getElementById('Boxes').addEventListener('click',Make_boxes);
 console.log("erew");
 
+
 (function () {
   // broadcast to content scripts and active background scripts
   chrome.runtime.sendMessage(
@@ -30,3 +31,21 @@ console.log("erew");
     }
   );
 })();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

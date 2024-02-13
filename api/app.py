@@ -5,38 +5,39 @@ from sentence_transformers import SentenceTransformer
 from model import Classifier, skipblock, predlist
 from rag import get_dark_patterns
 import imgkit
+import base64
+from flask import Flask, request, send_from_directory
 import time
+
 dpdet = Classifier()
 embed_model  = SentenceTransformer('BAAI/bge-large-en')
 dpdet.load_state_dict(torch.load('model.bin'))
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/html', methods = ['POST'])
-def returnHTML():
-    data = request.json
-    imgkit.from_string(data, 'out.jpg')
-    # print(data)
-    return 'successfully recieved'
-
+@app.route('/screenshot', methods = ['POST'])
+def renderScreenshot():
+    print("Screenshot recieved")
+    screenshot_data = request.json.get('screenshotData')
+    if screenshot_data:
+        image_data = base64.b64decode(screenshot_data.split(',')[1])
+        with open('out.jpg', 'wb') as f:
+            f.write(image_data)
+        return 'Image saved as out.jpg'
+    else:
+        return 'No screenshot data found'
 
 @app.route('/dom', methods = ['POST'])
 def returnDOM():
     data = request.json.split('\n')
-    # print(data)
     st=time.time()
-    det = predlist(dpdet, embed_model,data)
-    dark = []
+    det = predlist(dpdet, embed_model, data)
+    dark = {}
     for i in det:
-        dark.append({
-            "text": i[0],
-            "label": get_dark_patterns(i[1])[0][-1]
-        })
-
-        print("Hello")
+        dark[i[0]] = get_dark_patterns(i[1])[0][-1]
+    print('Time taken:',time.time()-st)
     print(dark)
     return jsonify(dark)
-
 
 if __name__ == '__main__':
     app.run(threaded=True, debug=True)

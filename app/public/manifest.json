@@ -1,3 +1,4 @@
+
 {
   "manifest_version": 3,
   "name": "App",
@@ -18,11 +19,13 @@
     "default_popup": "popup.html"
   },
   "permissions": [
-    "tabCapture",
-    "tabs",
     "storage",
     "activeTab",
-    "scripting"
+    "scripting",
+    "tabs",
+    "tabCapture",
+    "<all_urls>",
+    "idle"
   ],
   "content_scripts": [
     {
@@ -46,4 +49,4 @@
       ]
     }
   ]
-}
+} 
