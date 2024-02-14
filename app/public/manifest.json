@@ -10,7 +10,8 @@
     "128": "icons/icon_128.png"
   },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type":"module"
   },
   "action": {
     "default_title": "App",
@@ -19,6 +20,7 @@
   "permissions": [
     "storage",
     "activeTab",
+    "scripting",
     "tabs",
     "tabCapture",
     "<all_urls>",
@@ -34,5 +36,18 @@
         "contentScript.js"
       ]
     }
+  ] ,
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "pesticide.min.css",
+        "pesticide.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
   ]
 }
+  
+ 

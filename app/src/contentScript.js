@@ -16,20 +16,18 @@ function updateStates(root){
 
 var count=0;
 function highlightElement(element) {
-  // Add CSS styles to highlight the element
-  // if(element.matches(':hover')){return ;}
+
   element.style.border = '2px solid red'; // Example: red border
   element.style.backgroundColor = 'rgba(255, 0, 0, 0.5) '; // Semi-transparent yellow background color
   element.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)'; // Example: shadow effect
 
-  // You can also apply other styles to make the element stand out more
+
 }
 function unhighlightElement(element) {
-  // Add CSS styles to highlight the element
-  // if(element.matches(':hover')){return ;}
-  element.style.border = ''; // Example: red border
-  element.style.backgroundColor = ''; // Semi-transparent yellow background color
-  element.style.boxShadow = ''; // Example: shadow effect
+
+  element.style.border = ''; 
+  element.style.backgroundColor = ''; 
+  element.style.boxShadow = ''; 
 
   // You can also apply other styles to make the element stand out more
 }
@@ -213,11 +211,36 @@ executeFunction();
 setInterval(executeFunction, 5000);
 
 // Listen for message
+let ReportEvent = new CustomEvent('ReportClick');
+let NotReportEvent = new CustomEvent('NotReportClick');
+document.addEventListener('ReportClick', () => {
+  document.head.appendChild(stylesheet);
+  document.addEventListener('click', updateBanner, false);
+});
+document.addEventListener('NotReportClick', () => {
+  document.head.removeChild(stylesheet);
+  document.removeEventListener('click', updateBanner, false);
+});
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.type === 'Boxes') {
+    console.log('Boxes received');
+    ReportingMode = !ReportingMode;
+    if (ReportingMode) {
+      document.dispatchEvent(ReportEvent);
+    } else {
+      document.dispatchEvent(NotReportEvent);
+    }
+    sendResponse({});
+    return true;
+  }
+  if (request.type === 'innerText') {
+    const res = request.payload;
+    console.log(res);
+  }
   if (request.type === 'COUNT') {
     console.log(`Current count is ${request.payload.count}`);
   }
-
+  console.log(request.payload.message);
   // Send an empty response
   // See https://github.com/mozilla/webextension-polyfill/issues/130#issuecomment-531531890
   sendResponse({});
