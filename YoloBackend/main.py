@@ -11,7 +11,7 @@ from ultralytics import YOLO
 import io
 # model = YOLO('yolov8n.pt')
 model=  YOLO('bestn320Amazon.pt')
-class Echo(WebSocketEndpoint):
+class Detector(WebSocketEndpoint):
     encoding = "text"
     async def on_connect(self, websocket: WebSocket) -> None:
         await websocket.accept()
@@ -25,7 +25,7 @@ class Echo(WebSocketEndpoint):
 
 
 routes = [
-    WebSocketRoute("/ws", Echo)
+    WebSocketRoute("/ws", Detector)
 ]
 
 app = Starlette(routes=routes)

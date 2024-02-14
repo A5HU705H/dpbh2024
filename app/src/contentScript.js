@@ -23,34 +23,8 @@ const pageTitle = document.head.getElementsByTagName('title')[0].innerHTML;
 console.log(
   `Page title is: '${pageTitle}' - evaluated by Chrome extension's 'contentScript.js' file`
 );
-// const pageTitle = document.head.getElementsByTagName('title')[0].innerHTML;
-// console.log(
-//   `Page title is: '${pageTitle}' - evaluated by Chrome extension's 'contentScript.js' file`
-// );
-// console.log(document.cookie);
-// console.log(Object.values(sessionStorage));
-
-// Parsing of the DOM to get the texts
 const dom = document.body.innerText;
 
-function traverse(root, res) {
-  if (root == null || res.length <= 0) {
-    return;
-  }
-  root.childNodes.forEach((child) => {
-    traverse(child, res);
-    if (child) {
-      if (res.hasOwnProperty(child.innerText)) {
-        console.log('Flagging !');
-        child.style.backgroundColor = '#8F00FF';
-        child.appendChild(document.createTextNode(res[child.innerText]));
-        child.style.border = '5px solid black';
-      } else {
-        console.log('No flags !');
-      }
-    }
-  });
-}
 // console.log(document.body.textContent);
 
 // const dom = parser.parseFromString(document.body.innerHTML, 'text/html');
@@ -66,11 +40,6 @@ chrome.runtime.sendMessage(
       message: document.body.innerHTML,
       text: dom,
     },
-  },
-  (response) => {
-    console.log(response);
-    traverse(document.body, response);
-    console.log('Message sent to background file for innerText');
   }
 );
 function updateBanner(event) {

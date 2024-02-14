@@ -49,12 +49,8 @@ class Classifier(nn.Module):
 
 
 
-def predlist(model, embed_model, texts:list):
-    dps = []
-    for text in texts:
-        with torch.no_grad():
-            embeds = embed_model.encode(text)
-            preds = model(torch.tensor(embeds))
-        if preds>0.7:
-            dps.append((text,embeds))
-    return dps
+def pred(model, embed_model, text):
+    with torch.no_grad():
+        embeds = embed_model.encode(text)
+        preds = model(torch.tensor(embeds))
+    return {"text": text,"preds": preds,"embeds": embeds}
