@@ -1,43 +1,29 @@
-from flask import Flask, jsonify, request
-from flask_cors import CORS
+from fastapi import WebSocket
 import torch
+import json
 from sentence_transformers import SentenceTransformer
-from model import Classifier, skipblock, predlist
+from starlette.endpoints import WebSocketEndpoint
+from starlette.routing import  WebSocketRoute
+from starlette.applications import Starlette
+from starlette.responses import JSONResponse
+from model import Classifier, skipblock, pred
 from rag import get_dark_patterns
-import imgkit
-import base64
-from flask import Flask, request, send_from_directory
-import time
 
 dpdet = Classifier()
 embed_model  = SentenceTransformer('BAAI/bge-large-en')
 dpdet.load_state_dict(torch.load('model.bin'))
-app = Flask(__name__)
-CORS(app)
+class Pipeline(WebSocketEndpoint):
+    async def on_connect(self, websocket: WebSocket):
+        return await websocket.accept()
+    async def on_receive(self, websocket: WebSocket,data):
+        Input=json.loads(data)
+        print(Input)
+        result=pred(dpdet,embed_model,Input['text'])
+        if(result['preds']>0.7):
+            await websocket.send_json({"text":result['text'],'darkPattern':get_dark_patterns(result['embeds'])[0][-1],'tabId':Input['tabId']})
+    
+routes = [
+    WebSocketRoute("/ws", Pipeline)
+]
 
-@app.route('/screenshot', methods = ['POST'])
-def renderScreenshot():
-    print("Screenshot recieved")
-    screenshot_data = request.json.get('screenshotData')
-    if screenshot_data:
-        image_data = base64.b64decode(screenshot_data.split(',')[1])
-        with open('out.jpg', 'wb') as f:
-            f.write(image_data)
-        return 'Image saved as out.jpg'
-    else:
-        return 'No screenshot data found'
-
-@app.route('/dom', methods = ['POST'])
-def returnDOM():
-    data = request.json.split('\n')
-    st=time.time()
-    det = predlist(dpdet, embed_model, data)
-    dark = {}
-    for i in det:
-        dark[i[0]] = get_dark_patterns(i[1])[0][-1]
-    print('Time taken:',time.time()-st)
-    print(dark)
-    return jsonify(dark)
-
-if __name__ == '__main__':
-    app.run(threaded=True, debug=True)
+app = Starlette(routes=routes)
