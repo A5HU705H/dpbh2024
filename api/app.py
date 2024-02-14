@@ -17,10 +17,18 @@ class Pipeline(WebSocketEndpoint):
         return await websocket.accept()
     async def on_receive(self, websocket: WebSocket,data):
         Input=json.loads(data)
-        print(Input)
-        result=pred(dpdet,embed_model,Input['text'])
-        if(result['preds']>0.7):
-            await websocket.send_json({"text":result['text'],'darkPattern':get_dark_patterns(result['embeds'])[0][-1],'tabId':Input['tabId']})
+        # if(Input['type']==)
+        if Input['type']=='innerText':
+            result=pred(dpdet,embed_model,Input['text'])
+            if(result['preds']>0.7):
+                await websocket.send_json({"text":result['text'],'darkPattern':get_dark_patterns(result['embeds'])[0][-1],'tabId':Input['tabId']})
+        elif Input['type']=='SELECTED_INPUT':
+            print(Input)
+            # result=skipblock(Input['url'])
+            # await websocket.send_json({"text":result,'tabId':Input['tabId']})
+        else:
+            print("waste")
+        
     
 routes = [
     WebSocketRoute("/ws", Pipeline)
