@@ -268,10 +268,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     sendResponse({});
     return true;
   }
+  if(request.type==='result'){
+      console.log(request);
+  }
   if (request.type === 'innerText') {
     const res = request.payload;
     console.log('innerText received');
-
     console.log(res);
   }
   if (request.type === 'COUNT') {
