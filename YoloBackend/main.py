@@ -11,10 +11,12 @@ from ultralytics import YOLO
 import io
 # model = YOLO('yolov8n.pt')
 model=  YOLO('bestn320Amazon.pt')
+
 class Detector(WebSocketEndpoint):
     encoding = "text"
     async def on_connect(self, websocket: WebSocket) -> None:
         await websocket.accept()
+        
     async def on_receive(self, websocket, data):        
         try:
             Imb=data.split(',')[1]

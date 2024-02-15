@@ -1,0 +1,4 @@
+starlette
+ultralytics
+uvicorn
+fastapi
