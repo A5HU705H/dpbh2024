@@ -5,22 +5,32 @@ from sentence_transformers import SentenceTransformer
 from starlette.endpoints import WebSocketEndpoint
 from starlette.routing import  WebSocketRoute
 from starlette.applications import Starlette
+import torch.nn.functional as F
 from starlette.responses import JSONResponse
-from model import Classifier, skipblock, pred
+from model import Classifier , skipblock , pred
 from rag import get_dark_patterns
-
-dpdet = Classifier()
-embed_model  = SentenceTransformer('BAAI/bge-large-en')
-dpdet.load_state_dict(torch.load('model.bin'))
+import __main__
+# setattr(__main__,"Classifier",Classifier)
+# setattr(__main__,"skipblock",skipblock)
+dpdet=Classifier()
+dpdet.load_state_dict(torch.load('distill3skip2.bin'))
+embed_model  = SentenceTransformer('sentence-transformers/all-distilroberta-v1')
+# dpdet.load_state_dict(torch.load('model.bin'))
 class Pipeline(WebSocketEndpoint):
     async def on_connect(self, websocket: WebSocket):
         return await websocket.accept()
     async def on_receive(self, websocket: WebSocket,data):
         Input=json.loads(data)
+        # print(Input)
         result=pred(dpdet,embed_model,Input['text'])
-        if(result['preds']>0.7):
-            await websocket.send_json({"text":result['text'],'darkPattern':get_dark_patterns(result['embeds'])[0][-1],'tabId':Input['tabId']})
-    
+        try:
+            if(result['preds']>0.7):
+                DarkPatterns=get_dark_patterns(result['embeds'])
+                Dp=DarkPatterns[0][-1]
+                res={"text":result['text'],'darkPattern':Dp,'tabId':Input['tabId']}
+                await websocket.send_json(res)
+        except:
+            pass
 routes = [
     WebSocketRoute("/ws", Pipeline)
 ]

@@ -35,7 +35,7 @@ def rerank_queries_with_cross_encoder(query, chunks):
 
 # dark_patterns = data.values.tolist()
 
-biencoder = SentenceTransformer("BAAI/bge-large-en-v1.5", device="cpu")
+biencoder = SentenceTransformer("sentence-transformers/all-distilroberta-v1", device="cpu")
 cross_encoder = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-12-v2", max_length=512, device="cpu")
 
 # vec_database = []
@@ -53,7 +53,7 @@ cross_encoder = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-12-v2", max_length
 # with open('embeddings.pkl', 'wb') as f:
 #   pickle.dump(vec_database,f)
 
-with open('embeddings.pkl', 'rb') as f:
+with open('embedsDistill.pkl', 'rb') as f:
   vec_database = pickle.load(f)
 
 
