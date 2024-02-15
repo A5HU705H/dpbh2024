@@ -15,7 +15,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   }
 });
 wsb.addEventListener("message", (event) =>{
-  console.log(d.getTime()-t);
   let obj=JSON.parse(event.data)
   chrome.tabs.sendMessage(obj.tabId,{"type":'result',...obj})
 });
