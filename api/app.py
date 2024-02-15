@@ -5,17 +5,12 @@ from sentence_transformers import SentenceTransformer
 from starlette.endpoints import WebSocketEndpoint
 from starlette.routing import  WebSocketRoute
 from starlette.applications import Starlette
-import torch.nn.functional as F
-from starlette.responses import JSONResponse
-from model import Classifier , skipblock , pred
+from model import Classifier , pred
 from rag import get_dark_patterns
 import __main__
-# setattr(__main__,"Classifier",Classifier)
-# setattr(__main__,"skipblock",skipblock)
 dpdet=Classifier()
 dpdet.load_state_dict(torch.load('distill3skip2.bin'))
 embed_model  = SentenceTransformer('sentence-transformers/all-distilroberta-v1')
-# dpdet.load_state_dict(torch.load('model.bin'))
 class Pipeline(WebSocketEndpoint):
     async def on_connect(self, websocket: WebSocket):
         return await websocket.accept()

@@ -10,7 +10,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.type === "innerText") {
     const Arr=request.payload.text.split('\n')
     for (let i in Arr) {
-      if(Arr[i])wsb.send(JSON.stringify({"text":Arr[i],"tabId":sender.tab.id}))
+      if(Arr[i].length>2)wsb.send(JSON.stringify({"text":Arr[i],"tabId":sender.tab.id}))
     }
   }
 });

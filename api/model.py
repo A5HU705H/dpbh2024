@@ -1,23 +1,5 @@
-import json
-from PIL import Image
-import requests
-import numpy as np
-import transformers
-import re
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-import urllib
-from matplotlib import pyplot as plt
-from PIL import Image
-import requests
-from torch.utils.data import Dataset
-from torchvision import datasets
-import torchvision.transforms as transforms
-from sentence_transformers import SentenceTransformer
-import pandas as pd
-from PIL import Image
-import torch.optim as optim
 
 class skipblock(nn.Module):
     def __init__(self,inp,hid,out):
