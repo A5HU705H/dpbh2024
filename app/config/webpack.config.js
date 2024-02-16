@@ -12,6 +12,8 @@ const config = (env, argv) =>
       popup: PATHS.src + '/popup.js',
       contentScript: PATHS.src + '/contentScript.js',
       background: PATHS.src + '/background.js',
+      preselection: PATHS.src + '/preselection.js',
+      mutation: PATHS.src + '/mutation.js'
     },
     devtool: argv.mode === 'production' ? false : 'source-map',
   });
