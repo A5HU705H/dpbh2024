@@ -18,30 +18,45 @@ let projcss='body{outline:1px solid #2980b9!important}article{outline:1px solid 
 let stylesheet = document.createElement('style');
 let cssNode = document.createTextNode(projcss);
 stylesheet.appendChild(cssNode);
-//
+let cssStyle=`
+  .replaced{
+    background-color:rgba(255,0,0,0.5);
+  }
+`
+let stylesheet2=document.createElement('style');
+let cssNode2=document.createTextNode(cssStyle);
+stylesheet2.appendChild(cssNode2);
+document.head.appendChild(stylesheet2);
+
 const pageTitle = document.head.getElementsByTagName('title')[0].innerHTML;
 console.log(
   `Page title is: '${pageTitle}' - evaluated by Chrome extension's 'contentScript.js' file`
 );
 const dom = document.body.innerText;
 
-// console.log(document.body.textContent);
-
-// const dom = parser.parseFromString(document.body.innerHTML, 'text/html');
-// console.log(dom);
-// console.log(dom.body.innerText);
-// console.log('Hello World');
 
 // Communicate with background file by sending a message
-chrome.runtime.sendMessage(
-  {
-    type: 'innerText',
-    payload: {
-      message: document.body.innerHTML,
-      text: dom,
-    },
+function getDirectInnerText(element) {
+  // console.log(element);
+  if(element.tagName.toLowerCase() === 'script')return;
+  let childNodes = element.childNodes;
+
+  for (var i = 0; i < childNodes.length; i++) {
+    if(childNodes[i].nodeType == 3) {
+      chrome.runtime.sendMessage(
+        {
+          type:'innerText',
+          payload:{
+            text:childNodes[i].data,
+          }
+        }
+      )
+    }
   }
-);
+  return ;
+}
+document.body.querySelectorAll('*').forEach(getDirectInnerText);
+
 function updateBanner(event) {
   var id = event.target.id.toString() || '';
   var classList = event.target.classList.toString() || '';
@@ -256,21 +271,7 @@ document.addEventListener('NotReportClick', () => {
   document.head.removeChild(stylesheet);
   document.removeEventListener('click', updateBanner, false);
 });
-function traverse(root,request){
-  let text=request['text']
-  let Dp=request['darkPattern']
-  console.log(request)
-  console.log(text,' ',Dp,"Travesing")
-  if(!root||!text)return;
-  root.childNodes.forEach((child)=>{
-    traverse(child,request);
-    if(child.innerText==text){
-      child.style.backgroundColor = 'rgba(255,0,0,0.3)';
-      child.appendChild(document.createTextNode('\n'+Dp));
-      child.style.border = '5px solid black';
-    }
-  })
-}
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === 'Boxes') {
     console.log('Boxes received');
@@ -284,8 +285,24 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
   }
   if(request.type==='result'){
-      console.log(request);
-      traverse(document.body,request)
+    document.body.querySelectorAll('*').forEach((element)=>{
+      if(element.tagName.toLowerCase() === 'script')return;
+      let childNodes = element.childNodes;
+    
+      for (let i = 0; i < childNodes.length; i++) {
+        if(childNodes[i].nodeType == 3) {
+          if(childNodes[i].data===request.text){
+            let sp1=document.createElement('span');
+            sp1.textContent = childNodes[i].data+' '+request.darkPattern;
+            sp1.style.color='rgba(255,0,0,0.5)'
+            sp1.className="replaced"
+            element.replaceChild(sp1,childNodes[i]);
+            // console.log(sp1)
+          }
+        }
+      }
+      return;
+    });
   }
   if (request.type === 'innerText') {
     const res = request.payload;

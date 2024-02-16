@@ -16,7 +16,7 @@ class Pipeline(WebSocketEndpoint):
         return await websocket.accept()
     async def on_receive(self, websocket: WebSocket,data):
         Input=json.loads(data)
-        # print(Input)
+        print(Input)
         result=pred(dpdet,embed_model,Input['text'])
         try:
             if(result['preds']>0.7):

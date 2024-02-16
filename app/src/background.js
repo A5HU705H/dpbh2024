@@ -7,11 +7,9 @@
 const ws = new WebSocket("ws://localhost:8000/ws");
 const wsb=new WebSocket("ws://localhost:50037/ws");
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {    
-  if (request.type === "innerText") {
-    const Arr=request.payload.text.split('\n')
-    for (let i in Arr) {
-      if(Arr[i].length>2)wsb.send(JSON.stringify({"type":"result","text":Arr[i],"tabId":sender.tab.id}))
-    }
+  // console.log(request)
+  if (request.type === "innerText") {;
+    wsb.send(JSON.stringify({"type":"result","text":request.payload.text,"tabId":sender.tab.id}))
   }
 });
 wsb.addEventListener("message", (event) =>{
