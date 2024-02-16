@@ -21,7 +21,26 @@ let cssNode = document.createTextNode(projcss);
 stylesheet.appendChild(cssNode);
 let cssStyle=`
   .replaced{
-    background-color:rgba(255,0,0,0.5);
+    display: inline-block;
+    position: relative;
+    background-color:rgba(255,0,0,0.1);
+    width: 100%;
+  }
+  .replaced::before{
+    content: '';
+    position: absolute;
+    height: 20px;
+    top: -20px !important;
+    left: 0;
+    z-index: 1000;
+    width: 92%;
+    padding-left: 4%;
+    padding-right: 4%;
+  }
+  .replaced:hover::before{
+    content: attr(data-content) !important;
+    background-color: rgba(255,255,255) !important;
+    border-radius: 5px 5px 0 0!important;
   }
 `
 let stylesheet2=document.createElement('style');
@@ -108,7 +127,7 @@ function highlightMatchingElements() {
         
         // Add the text "Forced action detected" to the span element
         const forcedActionText = document.createElement('span');
-        forcedActionText.textContent = ' False Urgency detected';
+        forcedActionText.textContent = ' Forced Action detected';
         span.appendChild(forcedActionText);
         
         // Replace the text node with the span element
@@ -186,6 +205,7 @@ executeFunction();
 setInterval(executeFunction, 5000);
 
 // Listen for message
+let ReportingMode = false;
 let ReportEvent = new CustomEvent('ReportClick');
 let NotReportEvent = new CustomEvent('NotReportClick');
 document.addEventListener('ReportClick', () => {
@@ -218,11 +238,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if(childNodes[i].nodeType == 3) {
           if(childNodes[i].data===request.text){
             let sp1=document.createElement('span');
-            sp1.textContent = childNodes[i].data+' '+request.darkPattern;
+            sp1.textContent = childNodes[i].data;
+            sp1.setAttribute('data-content', request.darkPattern);
             sp1.style.color='rgba(255,0,0,0.5)'
-            sp1.className="replaced"
+            sp1.className="replaced";
+            console.log(sp1);
             element.replaceChild(sp1,childNodes[i]);
-            // console.log(sp1)
           }
         }
       }

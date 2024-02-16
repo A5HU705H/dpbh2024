@@ -4,6 +4,7 @@ import './popup.css';
 console.log("this is a popup");
 async function Make_boxes(){
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  console.log(tab,"Tab");
   console.log("clicked");
   chrome.tabs.sendMessage(
     tab.id,
