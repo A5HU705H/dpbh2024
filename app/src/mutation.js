@@ -1,32 +1,7 @@
-/* 
-    Nagging Checks:
-    a) elements that do not overlap with any other element apart from their parents or children are 
-       probably not nagging
-    b) elements that appear when the user triggers onclicked, keypress, hover events are probably not 
-       nagging
-    c) elements that appear when the user is idle or is scrolling
-*/
 
-// parse the dom tree, report any collisions between sibling nodes at each point
-// if there are collisions then highlight both of them in red
-
-// intersection observer will only track the visibility of existing elements
-// mutation observer will track if new elements are inserted
-// insertion of new elements will be tracked by document.body.
-
-// onload return nodes that are added that have
-// a) .checkVisibility() = true
-// b) position : fixed returns true
-// c) check if the user had done a keypress or onclick event soon
-// note if their parent satisfies these conditions then do not log these
-
-// function to monitor added Nodes (check if the child nodes are also logged)
-// filter out the absolute nodes that are added and apply subsequent observers on them
-
-// only log nodes that are added or removed
 const config = { attributes: false, childList: true, subtree: true };
 const visibilityMap = new Map();
-var makeRed=false;
+var makeRed=true;
 function highlightElement(element) {
     // Add CSS styles to highlight the element
     // if(element.matches(':hover')){return ;}
@@ -61,12 +36,11 @@ function highlightElement(element) {
             highlightElement(root);
           }
 
-          // console.log(root);
-            // console.log(wasVisible);
-            // console.log(isVisible);
-         //    console.log(root);
-             console.log(window.getComputedStyle(root).position);
+            if(window.getComputedStyle(root).position==='fixed'){
+             console.log(root);
              console.log(makeRed);
+            }
+
             var event=new CustomEvent("nagging",{"element":root});
             document.dispatchEvent(event);
             // console.log(root, 'visibility changed to visible');
@@ -98,7 +72,7 @@ function highlightElement(element) {
 }
 
 function handleChange(event) {
-//   console.log("handlechange triggered");
+  console.log("handlechange triggered");
   // console.log(event.target);
   makeRed=false;
   console.log("red made false");
@@ -113,7 +87,7 @@ function handleChange(event) {
   
   }
   function handleChangeLoad(event) {
-    //   console.log("handlechange triggered");
+      console.log("handlechangeLoad triggered");
       // console.log(event.target);
       makeRed=false;
       console.log("red made false");
@@ -133,6 +107,7 @@ document.addEventListener("keydown", handleChange);
 document.addEventListener('resize',handleChange);
 document.addEventListener('blur', handleChange);
 window.addEventListener("load", handleChangeLoad);
+window.addEventListener('popstate', handleChangeLoad);
 
 
 // Callback function to execute when mutations are observed
@@ -147,5 +122,6 @@ const observer = new MutationObserver(callback);
 // Start observing the target node for configured mutations
 window.onload = () => {
    console.log('page loaded');
+   handleChangeLoad();
    observer.observe(document.body,config);
 }
