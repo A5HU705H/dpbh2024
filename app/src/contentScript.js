@@ -28,14 +28,14 @@ let cssStyle=`
   }
   .replaced::before{
     content: '';
-    position: absolute;
-    height: 20px;
+    position: absolute!important;
+    height: 20px !important;
     top: -20px !important;
-    left: 0;
-    z-index: 1000;
-    width: 92%;
-    padding-left: 4%;
-    padding-right: 4%;
+    left: 0 !important;
+    z-index: 1000 !important;
+    width: 92% !important;
+    padding-left: 4% !important;
+    padding-right: 4% !important;
   }
   .replaced:hover::before{
     content: attr(data-content) !important;
