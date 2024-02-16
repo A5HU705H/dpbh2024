@@ -1,43 +1,33 @@
-from flask import Flask, jsonify, request
-from flask_cors import CORS
+from fastapi import WebSocket
 import torch
+import json
 from sentence_transformers import SentenceTransformer
-from model import Classifier, skipblock, predlist
+from starlette.endpoints import WebSocketEndpoint
+from starlette.routing import  WebSocketRoute
+from starlette.applications import Starlette
+from model import Classifier , pred
 from rag import get_dark_patterns
-import imgkit
-import base64
-from flask import Flask, request, send_from_directory
-import time
+import __main__
+dpdet=Classifier()
+dpdet.load_state_dict(torch.load('distill3skip2.bin'))
+embed_model  = SentenceTransformer('sentence-transformers/all-distilroberta-v1')
+class Pipeline(WebSocketEndpoint):
+    async def on_connect(self, websocket: WebSocket):
+        return await websocket.accept()
+    async def on_receive(self, websocket: WebSocket,data):
+        Input=json.loads(data)
+        # print(Input)
+        result=pred(dpdet,embed_model,Input['text'])
+        try:
+            if(result['preds']>0.7):
+                DarkPatterns=get_dark_patterns(result['embeds'])
+                Dp=DarkPatterns[0][-1]
+                res={"text":result['text'],'darkPattern':Dp,'tabId':Input['tabId']}
+                await websocket.send_json(res)
+        except:
+            pass
+routes = [
+    WebSocketRoute("/ws", Pipeline)
+]
 
-dpdet = Classifier()
-embed_model  = SentenceTransformer('BAAI/bge-large-en')
-dpdet.load_state_dict(torch.load('model.bin'))
-app = Flask(__name__)
-CORS(app)
-
-@app.route('/screenshot', methods = ['POST'])
-def renderScreenshot():
-    print("Screenshot recieved")
-    screenshot_data = request.json.get('screenshotData')
-    image_data = base64.b64decode(screenshot_data.split(',')[1])
-    with open('out.jpg', 'wb') as f:
-        f.write(image_data)
-    return 'Image saved as out.jpg'
-
-@app.route('/dom', methods = ['POST'])
-def returnDOM():
-    data = request.json.split('\n')
-    # print(data)
-    st=time.time()
-    det = predlist(dpdet, embed_model,data)
-    dark = []
-    for i in det:
-        dark.append({
-            "text": i[0],
-            "label": get_dark_patterns(i[1])[0][-1]
-        })
-    print(dark)
-    return jsonify(dark)
-
-if __name__ == '__main__':
-    app.run(threaded=True, debug=True)
+app = Starlette(routes=routes)
