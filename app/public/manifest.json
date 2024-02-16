@@ -34,7 +34,9 @@
       ],
       "run_at": "document_idle",
       "js": [
-        "contentScript.js"
+        "contentScript.js",
+        "mutation.js"
+
       ]
     }
   ] ,
@@ -49,4 +51,6 @@
       ]
     }
   ]
-} 
+}
+  
+
