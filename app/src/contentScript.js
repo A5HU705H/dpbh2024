@@ -48,13 +48,6 @@ let cssNode2=document.createTextNode(cssStyle);
 stylesheet2.appendChild(cssNode2);
 document.head.appendChild(stylesheet2);
 
-const pageTitle = document.head.getElementsByTagName('title')[0].innerHTML;
-console.log(
-  `Page title is: '${pageTitle}' - evaluated by Chrome extension's 'contentScript.js' file`
-);
-const dom = document.body.innerText;
-
-
 // Communicate with background file by sending a message
 function getDirectInnerText(element) {
   // console.log(element);

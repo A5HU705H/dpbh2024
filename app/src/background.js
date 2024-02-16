@@ -7,7 +7,6 @@
 const ws = new WebSocket("ws://localhost:8000/ws");
 const wsb=new WebSocket("ws://localhost:50037/ws");
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {    
-  // console.log(request)
   if (request.type === "innerText") {;
     wsb.send(JSON.stringify({"type":"result","text":request.payload.text,"tabId":sender.tab.id}))
   }
