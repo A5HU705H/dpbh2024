@@ -5,13 +5,9 @@ var makeRed=true;
 function highlightElement(element) {
     // Add CSS styles to highlight the element
     // if(element.matches(':hover')){return ;}
-    element.classList.add("replaced");
-    element.setAttribute("data-content","Forced Action");
-    visibilityMap.set(element, true);
-    // element.style.border = '2px solid red'; // Example: red border
-    // element.style.backgroundColor = 'rgba(255, 0, 0, 0.5) '; // Semi-transparent yellow background color
-    // element.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)'; // Example: shadow effect
-
+    element.style.border = '2px solid red'; // Example: red border
+    element.style.backgroundColor = 'rgba(255, 0, 0, 0.5) '; // Semi-transparent yellow background color
+    element.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)'; // Example: shadow effect
   
     // You can also apply other styles to make the element stand out more
   }
@@ -21,7 +17,7 @@ function highlightElement(element) {
     element.style.border = ''; // Example: red border
     element.style.backgroundColor = ''; // Semi-transparent yellow background color
     element.style.boxShadow = ''; // Example: shadow effect
-    
+  
     // You can also apply other styles to make the element stand out more
   }
   var count=0;
@@ -40,10 +36,10 @@ function highlightElement(element) {
             highlightElement(root);
           }
 
-            if(window.getComputedStyle(root).position==='fixed'){
-             console.log(root);
-             console.log(makeRed);
-            }
+            // if(window.getComputedStyle(root).position==='fixed'){
+            //  console.log(root);
+            //  console.log(makeRed);
+            // }
 
             var event=new CustomEvent("nagging",{"element":root});
             document.dispatchEvent(event);
@@ -76,33 +72,33 @@ function highlightElement(element) {
 }
 
 function handleChange(event) {
-  console.log("handlechange triggered");
+   console.log("handlechange triggered");
   // console.log(event.target);
   makeRed=false;
-  console.log("red made false");
+  // console.log("red made false");
   first=true;
   setTimeout(()=>{
     
     // processClick(document.body);
-    console.log("red made true");
+    // console.log("red made true");
     makeRed=true;
     first=false;
   },1000);
   
   }
   function handleChangeLoad(event) {
-      console.log("handlechangeLoad triggered");
+       console.log("handlechangeLoad triggered");
       // console.log(event.target);
       makeRed=false;
-      console.log("red made false");
+      // console.log("red made false");
       first=true;
       setTimeout(()=>{
         
         // processClick(document.body);
-        console.log("red made true");
+        // console.log("red made true");
         makeRed=true;
         first=false;
-      },6000);
+      },4000);
       
       }
 
