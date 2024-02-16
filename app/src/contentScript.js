@@ -256,6 +256,21 @@ document.addEventListener('NotReportClick', () => {
   document.head.removeChild(stylesheet);
   document.removeEventListener('click', updateBanner, false);
 });
+function traverse(root,request){
+  let text=request['text']
+  let Dp=request['darkPattern']
+  console.log(request)
+  console.log(text,' ',Dp,"Travesing")
+  if(!root||!text)return;
+  root.childNodes.forEach((child)=>{
+    traverse(child,request);
+    if(child.innerText==text){
+      child.style.backgroundColor = 'rgba(255,0,0,0.3)';
+      child.appendChild(document.createTextNode('\n'+Dp));
+      child.style.border = '5px solid black';
+    }
+  })
+}
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === 'Boxes') {
     console.log('Boxes received');
@@ -270,6 +285,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
   if(request.type==='result'){
       console.log(request);
+      traverse(document.body,request)
   }
   if (request.type === 'innerText') {
     const res = request.payload;
