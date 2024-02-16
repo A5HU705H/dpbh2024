@@ -5,9 +5,13 @@ var makeRed=true;
 function highlightElement(element) {
     // Add CSS styles to highlight the element
     // if(element.matches(':hover')){return ;}
-    element.style.border = '2px solid red'; // Example: red border
-    element.style.backgroundColor = 'rgba(255, 0, 0, 0.5) '; // Semi-transparent yellow background color
-    element.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)'; // Example: shadow effect
+    element.classList.add("replaced");
+    element.setAttribute("data-content","Forced Action");
+    visibilityMap.set(element, true);
+    // element.style.border = '2px solid red'; // Example: red border
+    // element.style.backgroundColor = 'rgba(255, 0, 0, 0.5) '; // Semi-transparent yellow background color
+    // element.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)'; // Example: shadow effect
+
   
     // You can also apply other styles to make the element stand out more
   }
@@ -17,7 +21,7 @@ function highlightElement(element) {
     element.style.border = ''; // Example: red border
     element.style.backgroundColor = ''; // Semi-transparent yellow background color
     element.style.boxShadow = ''; // Example: shadow effect
-  
+    
     // You can also apply other styles to make the element stand out more
   }
   var count=0;
@@ -98,7 +102,7 @@ function handleChange(event) {
         console.log("red made true");
         makeRed=true;
         first=false;
-      },4000);
+      },6000);
       
       }
 
