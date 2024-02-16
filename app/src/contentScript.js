@@ -54,7 +54,7 @@ function getDirectInnerText(element) {
   if(element.tagName.toLowerCase() === 'script')return;
   let childNodes = element.childNodes;
 
-  for (var i = 0; i < childNodes.length; i++) {
+  for (let i = 0; i < childNodes.length; i++) {
     if(childNodes[i].nodeType == 3) {
       chrome.runtime.sendMessage(
         {

@@ -32,7 +32,7 @@ function highlightElement(element) {
     if (wasVisible !== isVisible) {
       if(true){
         if (isVisible) {
-          if(window.getComputedStyle(root).position==='fixed' && makeRed){
+          if(window.getComputedStyle(root).position==='fixed' && makeRed && !root.classList.contains("injectedModal")){
             highlightElement(root);
           }
 

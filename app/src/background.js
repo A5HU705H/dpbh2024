@@ -14,6 +14,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 wsb.addEventListener("message", (event) =>{
   let obj=JSON.parse(event.data)
   chrome.tabs.sendMessage(obj.tabId,{"type":'result',...obj})
+  chrome.runtime.sendMessage({"type":'result',...obj});
 });
 function takeAndSendScreenshot() {
     chrome.tabs.captureVisibleTab(
