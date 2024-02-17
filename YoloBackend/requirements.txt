@@ -2,3 +2,5 @@ starlette
 ultralytics
 uvicorn
 fastapi
+paddleocr
+paddlepaddle
