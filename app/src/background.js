@@ -1,31 +1,39 @@
 'use strict';
 
-// With background scripts you can communicate with popup
-// and contentScript filess.
-// For more information on background script,
-// See https://developer.chrome.com/extensions/background_page
-const ws = new WebSocket("ws://localhost:8000/ws");
-const wsb=new WebSocket("ws://localhost:50037/ws");
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {    
+const ws = new WebSocket("ws://127.0.0.1:8000/ws");
+const wsb = new WebSocket("ws://127.0.0.1:50037/ws");
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.type === "innerText") {
-    const Arr=request.payload.text.split('\n')
-    for (let i in Arr) {
-      if(Arr[i].length>2)wsb.send(JSON.stringify({"text":Arr[i],"tabId":sender.tab.id}))
+    const arr = request.payload.text.split('\n')
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].length > 2) {
+        wsb.send(JSON.stringify({ "text": arr[i], "tabId": sender.tab.id }))
+      }
     }
   }
 });
-wsb.addEventListener("message", (event) =>{
-  let obj=JSON.parse(event.data)
-  chrome.tabs.sendMessage(obj.tabId,{"type":'result',...obj})
+
+wsb.addEventListener("message", (event) => {
+  let obj = JSON.parse(event.data)
+  console.log(obj)
+  chrome.tabs.sendMessage(obj.tabId, { "type": 'result', ...obj })
 });
+
+ws.addEventListener("message", (event) => {
+  let obj = JSON.parse(event.data)
+  console.log(obj)
+  // chrome.tabs.sendMessage(obj.tabId, { "type": 'result', ...obj })
+});
+
 function takeAndSendScreenshot() {
-    chrome.tabs.captureVisibleTab(
-      null,
-      { format: 'png' },
-      function (dataUrl) {
-        console.log(dataUrl,"dataUrl: ");
-        ws.send(dataUrl);
-      }
-    );
+  chrome.tabs.captureVisibleTab(
+    null,
+    { format: 'png' },
+    function (dataUrl) {
+      ws.send(dataUrl);
+    }
+  );
 }
-setInterval(takeAndSendScreenshot, 550);
+
+setInterval(takeAndSendScreenshot, 1000);
