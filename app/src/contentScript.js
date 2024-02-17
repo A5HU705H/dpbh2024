@@ -28,7 +28,7 @@ let cssStyle=`
   }
   .replaced::before{
     content: '';
-    position: absolute!important;
+    position: absolute !important;
     height: 20px !important;
     top: -20px !important;
     left: 0 !important;
@@ -234,8 +234,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             sp1.textContent = childNodes[i].data;
             sp1.setAttribute('data-content', request.darkPattern);
             sp1.style.color='rgba(255,0,0,0.5)'
-            sp1.className="replaced";
+            sp1.style.position = 'relative'
+            sp1.style.zIndex = 10000
+            sp1.className="replaced"; 
             console.log(sp1);
+            // element.appendChild(sp1)
+            const textnode = document.createTextNode(request.darkPattern);
+            textnode.style.backgroundColor = 'rbga(255,0,0,0.5)';
+            textnode.style.color = 'black'
+            childNodes[i].appendChild(textnode);
             element.replaceChild(sp1,childNodes[i]);
           }
         }

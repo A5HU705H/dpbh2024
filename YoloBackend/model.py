@@ -28,7 +28,23 @@ class Classifier(nn.Module):
 
     def forward(self, xb):
         return self.fin(self.skip3(self.skip2(self.skip1(xb))))
+class frclassifier(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.main=nn.Sequential(
+        skipblock(768,512,384),
+        skipblock(384,512,192),
+        skipblock(192,192,192),
+        skipblock(192,96,48),
+        skipblock(48,48,24)
+        )
+        self.fin = nn.Linear(24,1)
 
+
+
+    def forward(self, xb):
+        x = self.main(xb)
+        return self.fin(x)
 def pred(model, embed_model, text):
     with torch.no_grad():
         embeds = embed_model.encode(text)
