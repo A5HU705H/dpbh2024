@@ -21,7 +21,7 @@ class Pipeline(WebSocketEndpoint):
     async def on_receive(self, websocket: WebSocket,data):
         Input=json.loads(data)
         print(Input)
-        result=pred(dpdet,embed_model,preProcess(Input['text']))
+        result=pred(dpdet,embed_model,Input['text'])
         try:
             if(result['preds']>0.7):
                 DarkPatterns=get_dark_patterns(result['embeds'])

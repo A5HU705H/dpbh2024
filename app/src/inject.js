@@ -3,7 +3,7 @@ const MyDark={"element":"","Pattern":""}
 // Add click event listener to the document
 function letUserSelectElement(request, sender, sendResponse) {
     const style = document.createElement('style');
-    style.textContent =' * {border: 2px solid red !important;}';
+    style.textContent =' * {border: 1px solid black !important;}';
     document.head.appendChild(style);
 
     document.addEventListener('click', (event) => {
@@ -25,18 +25,21 @@ function letUserSelectElement(request, sender, sendResponse) {
 
         // set the height and width of the modal
         modal.style.width = '50%'; modal.style.height = '50%';
-        modal.style.minWidth = '50%'; modal.style.minHeight = '50%';
-        modal.style.backgroundColor = 'black'; modal.textContent = "What dark patterns did you notice?";
+        modal.style.minWidth = '50%'; modal.style.minHeight = '50%';    
+        modal.style.backgroundColor = 'white'; modal.textContent = "What dark patterns did you notice?";
+        modal.style.textAlign = "center"
+        modal.style.borderRadius = "5px"
+        modal.style.border = '2px solid black'
 
         // add padding to the modal
         modal.style.marginLeft = '25%'; modal.style.paddingLeft = '2%';
         modal.style.marginRight = '25%'; modal.style.paddingRight = '2%';
         modal.style.marginTop = '25%'; modal.style.paddingTop = '2%';
-        modal.style.marginBottom = '25%'; modal.style.paddingBottom = '5%';
+         modal.style.paddingBottom = '5%';
 
         // add options with fontcolor grey
-        modal.style.color = '#808080'
-        modal.style.fontFamily = 'courier, courier new, serif'
+        modal.style.color = '#black'
+        // modal.style.fontFamily = 'courier, courier new, serif'
 
         // options for user to select from
         let options = [
@@ -80,8 +83,8 @@ function letUserSelectElement(request, sender, sendResponse) {
         })
 
         let submit = document.createElement('div');
-        submit.classList.add('submit'); submit.textContent = 'submit';
-        submit.style.display = 'flex'; submit.style.border = 'solid white 2px'
+        submit.classList.add('submit'); submit.textContent = 'Submit';
+        submit.style.display = 'flex'; submit.style.border = 'solid black 1px'
         submit.style.marginLeft = '20%'; submit.style.marginRight = '20%';
         submit.style.justifyContent = 'center';
 
@@ -106,10 +109,10 @@ function letUserSelectElement(request, sender, sendResponse) {
         })
 
         submit.addEventListener('pointerenter', () => {
-            submit.style.border = 'solid grey 2px';
+            submit.style.border = 'solid black 1px';
         })
         submit.addEventListener('pointerleave', () => {
-            submit.style.border = 'solid white 2px';
+            submit.style.border = 'solid black 1px';
         })
 
         modal.appendChild(submit);

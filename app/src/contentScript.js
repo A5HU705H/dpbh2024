@@ -21,28 +21,24 @@ let cssNode = document.createTextNode(projcss);
 stylesheet.appendChild(cssNode);
 let cssStyle=`
   .replaced{
-    display: inline-block;
+    border: 1px solid #bf3668!important;
     position: relative;
     background-color:rgba(255,0,0,0.1);
-    width: 100%;
   }
   .replaced::before{
     content: attr(data-content);
     position: absolute!important;
     height: 20px !important;
     top: -20px !important;
+    color: rgba(0,0,0);
+    font-weight: 900;
     left: 0 !important;
     z-index: 1000 !important;
-    width: 92% !important;
     padding-left: 4% !important;
     padding-right: 4% !important;
-    background-color: rgba(0,0,0,0.5) !important;
-  
-  .replaced:hover::before{
-    content: attr(data-content) !important;
-    background-color: rgba(255,255,255) !important;
-    border-radius: 5px 5px 0 0!important;
+    background-color: rgba(240,240,240,0.8) !important;
   }
+  
 `
 let stylesheet2=document.createElement('style');
 let cssNode2=document.createTextNode(cssStyle);
@@ -234,8 +230,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             let sp1=document.createElement('span');
             sp1.textContent = childNodes[i].data;
             sp1.setAttribute('data-content', request.darkPattern);
-            sp1.style.color='rgba(255,0,0,0.5)'
-            sp1.className="replaced";
+            sp1.style.position = 'relative'
+            sp1.style.zIndex = 10000
+            sp1.className="replaced"; 
             console.log(sp1);
             element.replaceChild(sp1,childNodes[i]);
           }
