@@ -13,6 +13,7 @@ const config = (env, argv) =>
       contentScript: PATHS.src + '/contentScript.js',
       background: PATHS.src + '/background.js',
       mutation: PATHS.src + '/mutation.js',
+      inject:PATHS.src + '/inject.js',
     },
     devtool: argv.mode === 'production' ? false : 'source-map',
   });

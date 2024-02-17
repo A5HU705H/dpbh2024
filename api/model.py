@@ -34,7 +34,6 @@ class Classifier(nn.Module):
 
 
 
-
 def pred(model, embed_model, text):
     with torch.no_grad():
         embeds = embed_model.encode(text)
