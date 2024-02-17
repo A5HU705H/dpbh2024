@@ -6,6 +6,22 @@
 // See https://developer.chrome.com/extensions/background_page
 const ws = new WebSocket("ws://localhost:8000/ws");
 const wsb=new WebSocket("ws://localhost:50037/ws");
+ws.onclose = function(e) {
+  console.log('Socket is closed. Reconnect will be attempted in 1 second.', e.reason);
+  setTimeout(function() {
+    connect();
+  }, 1000);
+};
+wsb.onclose = function(e) {
+  console.log('Socket is closed. Reconnect will be attempted in 1 second.', e.reason);
+  setTimeout(function() {
+    connect();
+  }, 1000);
+};
+ws.addEventListener("message", (event)=>{
+  let obj=JSON.parse(event.data);
+  console.log(obj);
+})
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {    
   if (request.type === "innerText") {;
     wsb.send(JSON.stringify({"type":"result","text":request.payload.text,"tabId":sender.tab.id}))
