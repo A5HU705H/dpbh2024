@@ -27,7 +27,7 @@ let cssStyle=`
     width: 100%;
   }
   .replaced::before{
-    content: '';
+    content: attr(data-content);
     position: absolute!important;
     height: 20px !important;
     top: -20px !important;
@@ -36,7 +36,8 @@ let cssStyle=`
     width: 92% !important;
     padding-left: 4% !important;
     padding-right: 4% !important;
-  }
+    background-color: rgba(0,0,0,0.5) !important;
+  
   .replaced:hover::before{
     content: attr(data-content) !important;
     background-color: rgba(255,255,255) !important;
