@@ -1,6 +1,6 @@
 
 # Deception Detectors
-    
+    ![img](Deception Detectors.png)
 ## YOLO Module:
 - **Purpose**: Used for detecting reviews, carts, and determining items that are being added or removed by the user.
 - **Model**: We use a YOLOv8n model for robust detection.
